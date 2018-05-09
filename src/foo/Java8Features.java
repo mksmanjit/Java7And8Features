@@ -1,10 +1,11 @@
 package foo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Java8Features {
 
@@ -31,6 +32,8 @@ public class Java8Features {
                 System.out.println("forEach anonymous class value " + i);
             }
         });
+        list.forEach(n -> System.out.println(n));
+        list.forEach(System.out::println);
     }
     
     /**
@@ -81,6 +84,23 @@ public class Java8Features {
         myList.stream().filter(p -> p > 90).forEach(p -> System.out.println("Sequential " + p));
         List<Integer> arr = myList.stream().filter(p -> p > 90).collect(Collectors.toList());
         System.out.println(arr);
-    }
 
+        List<Integer> costBeforeTax = Arrays.asList(1, 2, 3, 4, 5, 5);
+        costBeforeTax.stream().map((cost) -> cost + 0.12 * cost).forEach(System.out::println);
+        costBeforeTax.stream().mapToDouble((i) -> i * i).forEach(System.out::println);
+        double total = costBeforeTax.stream().map((cost) -> cost).reduce((sum, cost) -> sum + cost).get();
+        System.out.println(total);
+        List<String> strList = Arrays.asList("a", "b", "c", "d");
+        String toString = strList.stream().map((s) -> s.toUpperCase()).collect(Collectors.joining(", "));
+        System.out.println(toString);
+        
+        List<Integer> distinctList = costBeforeTax.stream().map((i) -> i).distinct().collect(Collectors.toList());
+        System.out.println(distinctList);
+        
+        IntSummaryStatistics stats = costBeforeTax.stream().mapToInt((i) -> i).summaryStatistics();
+        System.out.println("Highest number in List : " + stats.getMax());
+        System.out.println("Lowest number in List : " + stats.getMin());
+        System.out.println("Sum of all numbers : " + stats.getSum());
+        System.out.println("Average of all numbers : " + stats.getAverage());
+    }
 }
