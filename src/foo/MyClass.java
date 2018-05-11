@@ -1,6 +1,9 @@
 package foo;
 
 public class MyClass implements Interface1, Interface2{
+    public MyClass() {
+        System.out.println("Instance Created");
+    }
 
     @Override
     public void method2() {
@@ -19,5 +22,5 @@ public class MyClass implements Interface1, Interface2{
         // TODO Auto-generated method stub
         Interface1.super.log();
     }
-
+    
 }

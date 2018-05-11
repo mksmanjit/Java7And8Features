@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ public class Java8Features {
         defaultAndStaticMethod();
         lambdaExpression();
         streamAPIForCollection();
+        doSomeMoreTestingOnCollection();
     }
     
     /**
@@ -80,13 +82,16 @@ public class Java8Features {
     public static void streamAPIForCollection() {
         List<Integer> myList = new ArrayList<>();
         for(int i=0; i<100; i++) myList.add(i);
+        // If you want to filter some value from the collection then you can use filter method.
         myList.parallelStream().filter(p -> p > 90).forEach(p -> System.out.println("Parallel " + p));
         myList.stream().filter(p -> p > 90).forEach(p -> System.out.println("Sequential " + p));
         List<Integer> arr = myList.stream().filter(p -> p > 90).collect(Collectors.toList());
         System.out.println(arr);
-
+        
         List<Integer> costBeforeTax = Arrays.asList(1, 2, 3, 4, 5, 5);
+        // map will change to each value in the collection
         costBeforeTax.stream().map((cost) -> cost + 0.12 * cost).forEach(System.out::println);
+        //mapToDouble will change each value in the collection to double. 
         costBeforeTax.stream().mapToDouble((i) -> i * i).forEach(System.out::println);
         double total = costBeforeTax.stream().map((cost) -> cost).reduce((sum, cost) -> sum + cost).get();
         System.out.println(total);
@@ -97,10 +102,81 @@ public class Java8Features {
         List<Integer> distinctList = costBeforeTax.stream().map((i) -> i).distinct().collect(Collectors.toList());
         System.out.println(distinctList);
         
+        // summaryStatistics method has method like min, max, sum, average etc. 
         IntSummaryStatistics stats = costBeforeTax.stream().mapToInt((i) -> i).summaryStatistics();
         System.out.println("Highest number in List : " + stats.getMax());
         System.out.println("Lowest number in List : " + stats.getMin());
         System.out.println("Sum of all numbers : " + stats.getSum());
         System.out.println("Average of all numbers : " + stats.getAverage());
+        
+        List<Integer> list = Arrays.asList(4, 1, 5, 2, 5, 5);
+        // get the count of list
+        System.out.println(list.stream().count());
+        // return true if any element in the list is equal to 5 else false.
+        System.out.println(list.stream().anyMatch(i-> i==5));
+        // return true if all the element in the list is equal to 5 else false.
+        System.out.println(list.stream().allMatch(i-> i==5));
+        // Method reference examples
+        /*
+         * You use lambda expressions to create anonymous methods. Sometimes, however,
+         * a lambda expression does nothing but call an existing method. In those cases,
+         * it's often clearer to refer to the existing method by name. Method references
+         * enable you to do this; they are compact, easy-to-read lambda expressions for
+         * methods that already have a name.
+         * 
+         *            Kind                                                   Example
+         * Reference to a static method                             ContainingClass::staticMethodName
+         * Reference to an instance method of a particular object   containingObject::instanceMethodName
+         * Reference to an instance method of an arbitrary          ContainingType::methodName
+         * object of a particular type 
+         * Reference to a constructor                               ClassName::new
+         * 
+         */
+        Interface3 interface3 = MyClass::new;
+        System.out.println(interface3.method1());
+        // print the distinct no in the list.
+        list.stream().distinct().forEach(System.out::println);
+        // find any element which matched the filter.
+        Optional<Integer> value = list.stream().filter(x -> x > 6).findAny();
+        // option has method orElse if the value is not null then value is returned
+        // else the value you passed will be return in this case null.
+        System.out.println(value.orElse(null));
+        /*
+         * If you have list of list(nested list) and you wanted to process on the element of each list
+         * then in that case you have to use a flatMap which return a
+         * stream for each collection.
+         */
+        List<List<Integer>> nestedListOfInteger = Arrays.asList(list, list) ;
+        nestedListOfInteger.stream().flatMap(t -> t.stream()).forEach(System.out::println);
+        List<List<List<Integer>>> multipleNestedListOfInteger = Arrays.asList(nestedListOfInteger, nestedListOfInteger);
+        multipleNestedListOfInteger.stream().flatMap(x -> x.stream().flatMap(y -> y.stream()))
+                .forEach(System.out::println);
+        double totalSum = nestedListOfInteger.stream().flatMapToDouble(t -> t.stream().mapToDouble(x -> x + 0.2)).sum();
+        System.out.println(totalSum);
+        
+        // limit means break the list with top 3 element in the list.
+        list.stream().limit(3).forEach(System.out::println);
+        // max method takes comparator and return the Optional object containing max value.
+        System.out.println("Max in the list" + list.stream().max((x, y) -> x.compareTo(y)).orElse(null));
+        // peek is for debugging it does not change anything in the stream.
+        list.stream().peek(x -> System.out.println("Inside " + x)).filter(f -> f > 2)
+                .peek(x -> System.out.println("Inside Inside " + x)).forEach(System.out::println);
+        //reduce method will do reduction on the elements of this stream, using an accumulation function, 
+        // and returns an {@code Optional} describing the reduced value, if any.
+        System.out.println(list.stream().reduce((x, y) -> x + y).get());
+        /*
+         * Returns a stream consisting of the remaining elements of this stream
+         * after discarding the first {@code n} elements of the stream.
+         * If this stream contains fewer than {@code n} elements then an
+         * empty stream will be returned.
+         */
+        list.stream().skip(3).forEach(System.out::println);
+        /*
+         * Returns a stream consisting of the elements of this stream, sorted
+         * according to natural order.  If the elements of this stream are not
+         * {@code Comparable}, a {@code java.lang.ClassCastException} may be thrown
+         * when the terminal operation is executed.
+         */
+        list.stream().sorted().forEach(System.out::println);
     }
 }
