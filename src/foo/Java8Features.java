@@ -15,7 +15,6 @@ public class Java8Features {
         defaultAndStaticMethod();
         lambdaExpression();
         streamAPIForCollection();
-        doSomeMoreTestingOnCollection();
     }
     
     /**
@@ -42,7 +41,7 @@ public class Java8Features {
      * From Java 8, interfaces are enhanced to have method with implementation. We can use default
      * and static keyword to create interfaces with method implementation
      * 
-     * We know that Java doesn’t provide multiple inheritance in Classes because it leads to Diamond Problem.
+     * We know that Java doesnâ€™t provide multiple inheritance in Classes because it leads to Diamond Problem.
      * So how it will be handled with interfaces now, since interfaces are now similar to abstract classes.
      * The solution is that compiler will throw exception in this scenario and we will have to provide
      * implementation logic in the class implementing the interfaces.
@@ -58,10 +57,10 @@ public class Java8Features {
     }
     /**
      * Functional interfaces are new concept introduced in Java 8. An interface with exactly
-     * one abstract method becomes Functional Interface. We don’t need to use @FunctionalInterface
+     * one abstract method becomes Functional Interface. We donâ€™t need to use @FunctionalInterface
      * annotation to mark an interface as Functional Interface. @FunctionalInterface annotation is a
      * facility to avoid accidental addition of abstract methods in the functional interfaces. You 
-     * can think of it like @Override annotation and it’s best practice to use it. java.lang.Runnable
+     * can think of it like @Override annotation and itâ€™s best practice to use it. java.lang.Runnable
      * with single abstract method run() is a great example of functional interface.
      * 
      * 
