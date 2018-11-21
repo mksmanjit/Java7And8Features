@@ -2,9 +2,15 @@ package foo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IntSummaryStatistics;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -15,7 +21,6 @@ public class Java8Features {
         defaultAndStaticMethod();
         lambdaExpression();
         streamAPIForCollection();
-        doSomeMoreTestingOnCollection();
     }
     
     /**
@@ -155,7 +160,7 @@ public class Java8Features {
         System.out.println(totalSum);
         
         // limit means break the list with top 3 element in the list.
-        list.stream().limit(3).forEach(System.out::println);
+        list.stream().limit(0).forEach(System.out::println);
         // max method takes comparator and return the Optional object containing max value.
         System.out.println("Max in the list" + list.stream().max((x, y) -> x.compareTo(y)).orElse(null));
         // peek is for debugging it does not change anything in the stream.
@@ -178,5 +183,26 @@ public class Java8Features {
          * when the terminal operation is executed.
          */
         list.stream().sorted().forEach(System.out::println);
+        
+        list.stream().sorted((x,y)->x.compareTo(y)).forEach(System.out::print);
+        
+        // Iterating over Map using java 8
+        Map<Character, Integer> map = new HashMap<>();
+        map.put('a', 1);
+        map.put('b', 2);
+        map.put('c', 1);
+        // finding first matching key from the map when iterating over keyset.
+        System.out.println(map.keySet().stream().filter(k -> map.get(k) == 1).findFirst().get());
+        // finding first matching key from the map when iterating over entry set.
+        System.out.println(map.entrySet().stream().filter(e -> e.getValue() == 1).map( i -> i.getKey()).findFirst().get());
+        // Printing key value in custom format using stream.
+        map.entrySet().forEach(i-> System.out.println("Key=" + i.getKey() + " Value=" + i.getValue()));
+        // Iterating over Set using java 8
+        Set<String> set = new HashSet<String>();
+        set.add("t");
+        set.add("y");
+        set.add("z");
+        System.out.println(set.stream().filter(i->i == "x").collect(Collectors.toList()));
+        System.out.println(set.stream().filter(i->i == "x").findFirst().orElse(null));
     }
 }
